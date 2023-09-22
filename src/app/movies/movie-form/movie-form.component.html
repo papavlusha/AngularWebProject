@@ -1,0 +1,28 @@
+
+<div class="container">
+    <h1>add Movie/ redact</h1>
+    <hr class="my-2">
+    <hr class="my-2">
+    <form (ngSubmit)="onSubmit()" #userForm = "ngForm">
+     <div class="form-group">
+        <label for="id">Number:</label>
+        <input type="number" class="form-control"   [(ngModel)] ="movie.id" name="movie_id_add" required>
+      </div> 
+      <div class="form-group">
+        <label for = "name">Name:</label>
+        <input type="text" class = "form-control" [(ngModel)] ="movie.name" name = "movie_name" required>
+      </div>
+     
+      <div class="form-group">
+        <label for = "director">Director:</label>
+        <input type="text" class = "form-control" [(ngModel)] ="movie.director" name = "movie_director" required>
+      </div>
+      
+<div class="form-group">
+        <label for = "date">Date:</label>
+  <input type="number" class ="form-control" [(ngModel)] = "movie.date" name="movie_date" required>     
+      </div>
+      <button type="submit" [disabled] = "!userForm.form.valid" class="btn btn-default">Добавить</button>
+    </form>
+</div>
+

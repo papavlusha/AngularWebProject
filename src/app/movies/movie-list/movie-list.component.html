@@ -1,0 +1,12 @@
+<div class="container">
+    <h2 class="mt-5 mb-3">Movie List</h2>
+    <ul class="list-group">
+      <li
+        class="list-group-item"
+        *ngFor="let movie of movies"
+        (click)="showMovieDetails(movie)"
+      >
+        {{ movie.name}}
+      </li>
+    </ul>
+  </div>
