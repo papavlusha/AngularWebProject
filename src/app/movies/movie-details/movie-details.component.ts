@@ -13,9 +13,9 @@ export class MovieDetailsComponent {
 
   constructor(private movieService: MoviesService, private route: ActivatedRoute, private router: Router) { }
 
-  ngOnInit() {
-    const movieId = +this.route.snapshot.paramMap.get('id')!
-    this.movie = this.movieService.getMovieData(movieId);
+  async ngOnInit() {
+    const movieId = this.route.snapshot.paramMap.get('id')!
+    this.movie = await this.movieService.getMovieData(movieId);
   }
 
    onDel(){

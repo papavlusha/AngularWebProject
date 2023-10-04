@@ -12,8 +12,8 @@ export class MovieListComponent {
   movies: Movie[] = [];
   constructor(private moviesService: MoviesService, private router: Router) { }
 
-  ngOnInit() {
-    this.movies = this.moviesService.getMovies();
+  async ngOnInit() {
+    this.movies = await this.moviesService.getMovies();
   }
 
   showMovieDetails(movie: Movie): void {

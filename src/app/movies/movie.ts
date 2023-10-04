@@ -1,5 +1,5 @@
 export class Movie {
-    id: number = 0;
+    id: string = "";
     name: string  = "";
     director: string = "";
     date: number = 0;

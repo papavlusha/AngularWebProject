@@ -1,51 +1,55 @@
-import { Injectable } from '@angular/core';
-import { Movies } from 'src/data/mock-movie-list';
+import { Injectable, inject } from '@angular/core';
 import { Movie } from './movie';
 import { FormsModule } from '@angular/forms';
+import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, updateDoc, where } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
 })
 export class MoviesService {
-
-  private movies: Movie[] = [];
-  getMovies(): Movie[] {
-    return Movies;
+  private path = "movies"
+  constructor (private db : Firestore) {
+    db = inject(Firestore);
   }
 
-  getMovieData(id: number) {
-    return Movies.find(movie => movie.id === id);
+  async getMovies() {
+    const colRef = collection(this.db, this.path)
+    const q = query(
+      colRef,
+      orderBy('name')
+    )
+    const docs = await getDocs(q);
+    return docs.docs.map(
+      (doc) => {
+        return {
+          id : doc.id,
+          ...doc.data()
+        } as Movie
+      }
+    )
   }
 
-  addMovie(movie: Movie) {
-    for(let i = 0; i < this.movies.length; i++){
-        if(movie.id == this.movies[i].id){
-          this.movies[i] = movie;
-          return;
-        }
-    }
-    movie.id = this.movies.length > 0 ? Math.max(...this.movies.map(d => d.id)) + 1 : 1;
-    this.movies.push(movie);
-    console.log(this.movies)
+  async getMovieData(id: string) {
+    const docRef = doc(this.db, this.path, id);
+    const movieQuery = await getDoc(docRef);
+    return {
+      ...movieQuery.data(),
+      id
+    } as Movie
+
+ 
+  }
+
+  async addMovie(movie: Movie) {
+    const { id, ...data } = movie;
+    addDoc(collection(this.db, this.path), data)
   }
   
-  updateMovie(movie: Movie) {
-    let idx = this.movies.findIndex(d => d.id === movie.id);
-    if (idx !== -1) {
-      this.movies[idx] = movie;
-    }
+  async updateMovie(movie: Movie) {
+    const { id, ...data } = movie
+    updateDoc(doc(this.db, this.path, id), data);
   }
   
-  deleteMovie(id: number | undefined) {
-    for(let i = 0 ; i < this.movies.length; i ++){  
-      if(this.movies[i].id == id){
-        this.movies.splice(i,1)
-        break;
-      }    
-    }
+  async deleteMovie(id: string | undefined) {
+    if(id != undefined) deleteDoc(doc(this.db, this.path, id))
   }
-
-  
-  constructor() {
-    this.movies = Movies;
-   }
 }
